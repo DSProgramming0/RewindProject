@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     public float normalSpeed = 12f;
     public float sprintSpeed = 17f;
     public float gravity = -9.81f;
-    public float groundDistance = 0.4f;
+    public float groundDistance = 0.8f;
     public float jumpHeight = 3f;
     public float extraJumpHeight = 4.5f;
     public int extraJumps = 1;
