@@ -9,12 +9,15 @@ public class Explosion : MonoBehaviour
     [SerializeField] private float radius = 5f;
     [SerializeField] private ParticleSystem explosionEffect;
 
+    private int soundIndex;
+
     float countdown;
     bool hasExploded = false;
 
     void Start()
     {
         countdown = delay;
+        soundIndex = Random.Range(0, GameAssets.instance.explosionSoundClips.Count -1);
     }
 
     void Update()
@@ -29,6 +32,7 @@ public class Explosion : MonoBehaviour
     void Explode()
     {
         Instantiate(explosionEffect, transform.position, transform.rotation);
+        SoundManager.Play3DSoundFromList(soundIndex, transform.position);
 
         Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
 

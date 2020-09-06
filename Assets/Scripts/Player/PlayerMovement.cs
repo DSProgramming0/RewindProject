@@ -18,7 +18,7 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask groundMask;
 
     Vector3 velocity;
-    bool isGrounded;
+    public bool isGrounded;
 
     void Start()
     {
@@ -59,14 +59,16 @@ public class PlayerMovement : MonoBehaviour
         if(Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            SoundManager.Play3DSound(SoundManager.Sound.Jump, transform.position);
         }
 
         //DoubleJump
-        if(!isGrounded && extraJumps == 1)
+        if (!isGrounded && extraJumps == 1)
         {
             if (Input.GetButtonDown("Jump"))
             {
                 velocity.y = jumpHeight * extraJumpHeight;
+                SoundManager.Play3DSound(SoundManager.Sound.Jump2, transform.position);
                 extraJumps--;
             }
         }

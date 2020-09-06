@@ -6,7 +6,7 @@ public class TimeBody : MonoBehaviour
 {
     [SerializeField] private TimeManager timeManager;
 
-    private bool isRewinding = false;
+    public bool isRewinding = false;
     private bool isPlayer;
 
     public float recordTime = 5f;
@@ -17,6 +17,7 @@ public class TimeBody : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GameManager.instance.onLevelReset += clearPointsInTime;
         isPlayer = GetComponent<CharacterController>();
 
         pointsInTime = new List<PointInTime>();
@@ -29,15 +30,22 @@ public class TimeBody : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
-            StartRewind();
+        {
+            if(isPlayer && timeManager.canUseTimeSkills)
+            {
+                StartRewind();
+            }
+        }
         if (Input.GetKeyUp(KeyCode.R))
             StopRewind();      
     }
 
     void FixedUpdate()
     {
-        if (isRewinding)
+        if (isRewinding)        {
+            
             Rewind();
+        }
         else
             Record();
     }
@@ -45,15 +53,17 @@ public class TimeBody : MonoBehaviour
     void Rewind()
     {
         if(pointsInTime.Count > 0)
-        {
-            PostProcessingManager.instance.setProfile(PostProcessingManager.instance.rewindingProfile);
+        {            
+            PostProcessingManager.instance.setVolumeState(VolumeStates.REWINDING);
 
             PointInTime pointInTime = pointsInTime[0];
             transform.position = pointInTime.position;
             transform.rotation = pointInTime.rotation;
 
             if(isPlayer)
-            timeManager.ChangeAudioPitch(-.46f , 1.4f);
+            {
+                timeManager.ChangeAudioPitch(-.46f, 1.4f);
+            }
 
             pointsInTime.RemoveAt(0);
         }
@@ -77,15 +87,19 @@ public class TimeBody : MonoBehaviour
     {
         isRewinding = true;
 
-        if(!isPlayer)
+        if (!isPlayer)
             rb.isKinematic = true;
+    }
+
+    void clearPointsInTime()
+    {
+        pointsInTime.Clear();
     }
 
     void StopRewind()
     {
         isRewinding = false;
-        PostProcessingManager.instance.removeProfile();
-
+        PostProcessingManager.instance.setVolumeState(VolumeStates.STANDARD);
         if (!isPlayer)
             rb.isKinematic = false;
     }

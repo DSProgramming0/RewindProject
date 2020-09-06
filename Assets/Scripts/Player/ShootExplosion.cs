@@ -94,7 +94,7 @@ public class ShootExplosion : MonoBehaviour
             Shoot();
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && timeManager.canUseTimeSkills)
         {
             timeManager.DoSlowMotion();
         }

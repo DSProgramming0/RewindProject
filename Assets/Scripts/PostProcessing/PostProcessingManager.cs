@@ -7,9 +7,13 @@ using UnityEngine.Experimental.Rendering.Universal;
 public class PostProcessingManager : MonoBehaviour
 {
     public static PostProcessingManager instance;
-    [SerializeField] private Volume volume;
+    [SerializeField] private TimeManager timeManager;
+    [SerializeField] private Volume volumeSlot;
+    [SerializeField] private VolumeStates currentVolumeState;
+
 
     public VolumeProfile standardProfile;
+    public VolumeProfile slowedProfile;
     public VolumeProfile rewindingProfile;
 
     void Awake()
@@ -17,13 +21,34 @@ public class PostProcessingManager : MonoBehaviour
         instance = this;
     }
 
-    public void setProfile(VolumeProfile _profile)
+    public void setVolumeState(VolumeStates _desiredVolume)
     {
-        volume.profile = _profile;
-    }
+        currentVolumeState = _desiredVolume;
 
-    public void removeProfile()
-    {
-        volume.profile = standardProfile;
-    }
+        switch (currentVolumeState)
+        {
+            case VolumeStates.STANDARD:
+                volumeSlot.profile = standardProfile;
+                timeManager.usingTimePoints = false;
+                break;
+            case VolumeStates.SLOWED:
+                volumeSlot.profile = slowedProfile;
+                timeManager.usingTimePoints = true;
+                break;
+            case VolumeStates.REWINDING:
+                volumeSlot.profile = rewindingProfile;
+                timeManager.usingTimePoints = true;
+                break;
+            default:
+                volumeSlot.profile = standardProfile;
+                break;
+        }
+    }   
+}
+
+public enum VolumeStates
+{
+    STANDARD,
+    SLOWED,
+    REWINDING
 }
