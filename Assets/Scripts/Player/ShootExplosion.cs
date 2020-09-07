@@ -77,7 +77,7 @@ public class ShootExplosion : MonoBehaviour
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit))
         {           
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
-            Debug.Log("Did Hit");
+            Debug.Log("hit " + hit.collider.name);
             Instantiate(explosion, hit.point, Quaternion.LookRotation(_hit.normal));
 
             //timeManager.DoSlowMotion();
