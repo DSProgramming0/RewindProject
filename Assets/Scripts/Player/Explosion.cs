@@ -12,7 +12,6 @@ public class Explosion : MonoBehaviour
     private int soundIndex;
 
     float countdown;
-    bool hasExploded = false;
 
     void Start()
     {
@@ -23,7 +22,7 @@ public class Explosion : MonoBehaviour
     void Update()
     {
         countdown -= Time.deltaTime;
-        if(countdown <= 0f && !hasExploded)
+        if(countdown <= 0f)
         {
             Explode();
         }
@@ -43,9 +42,14 @@ public class Explosion : MonoBehaviour
             {
                 rb.AddExplosionForce(power, transform.position, radius);
             }
+
+           // Store a list of gameobjects in a tighter radius, destroy and play particles
+            if (nearbyObject.tag == "Destroyable")
+            {
+                Destroy(rb.gameObject);
+            }
         }
 
         Destroy(gameObject);
-    }
-
+    }   
 }

@@ -106,7 +106,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public event Action onLevelReset;
+    //Clear points in time to stop player rewinding through deathscreen, resets generated level
+    public event Action onLevelReset; 
     public void ResetLevel()
     {
         if (onLevelReset != null)

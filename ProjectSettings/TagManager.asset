@@ -8,6 +8,8 @@ TagManager:
   - StartingCube
   - FinishCube
   - DeathFloor
+  - Explosion
+  - Destroyable
   layers:
   - Default
   - TransparentFX
@@ -21,7 +23,7 @@ TagManager:
   - Ground
   - Postprocessing
   - NoSelfCollide
-  - 
+  - Room
   - 
   - 
   - 
