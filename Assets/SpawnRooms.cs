@@ -6,6 +6,7 @@ public class SpawnRooms : MonoBehaviour
 {
     public LayerMask whatIsRoom;
     public LevelGeneration levelGen;
+    private bool hasAdded;
 
     [SerializeField] Collider[] roomDetection;
 
@@ -15,11 +16,18 @@ public class SpawnRooms : MonoBehaviour
         roomDetection = Physics.OverlapSphere(transform.position, 0.1f, whatIsRoom);
         if(roomDetection.Length == 0 && levelGen.stopGenerating == true)
         {
-            Debug.Log("Spawning");
             int rand = Random.Range(0, levelGen.emptyBlocks.Length);
-            GameObject spawnedFloorBlock = Instantiate(levelGen.emptyBlocks[rand], transform.position, Quaternion.identity);
-            levelGen.modifyListExternal(true, levelGen.spawnedFloorObjects, spawnedFloorBlock);
-            Destroy(gameObject);
+            if(!hasAdded)
+            {
+                GameObject spawnedFloorBlock = Instantiate(levelGen.emptyBlocks[rand], transform.position, Quaternion.identity);
+                levelGen.modifyListExternal(true, levelGen.spawnedFloorObjects, spawnedFloorBlock);
+            }
+            hasAdded = true;           
         }
-    }
+
+        if(levelGen.stopGenerating == false)
+        {
+            hasAdded = false;
+        }
+    }  
 }

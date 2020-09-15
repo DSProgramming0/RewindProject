@@ -4172,6 +4172,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf4a65e9c32489d478b1ee4ac4c9a2f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnedObjects: []
+  spawnedFloorObjects: []
+  shouldResetLevel: 0
   startingPositions:
   - {fileID: 944760389}
   - {fileID: 691440559}
@@ -4190,7 +4193,10 @@ MonoBehaviour:
   - {fileID: 2773935020015680280, guid: 833e41fbe7732424dbf0a8017e67ce11, type: 3}
   emptyBlocks:
   - {fileID: 2773935020015680280, guid: 4bbd1f058147cdf42adad30bf3f2b4b9, type: 3}
+  - {fileID: 2773935020015680280, guid: 13095c654c7b78447a6d87b3aa2dc247, type: 3}
+  - {fileID: 2773935020015680280, guid: 98f79efc3df90b04abce6ba0c3607afe, type: 3}
   moveAmount: 10
+  timeBetweenBlock: 0
   startTimeBetweenMove: 0.25
   minX: -45
   maxX: 45
@@ -4671,7 +4677,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 459470554}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 62, z: 0}
+  m_LocalPosition: {x: 0, y: 62, z: 40}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -15179,13 +15185,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1564782663}
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 22.96, y: 65.7, z: -18.76}
+  m_LocalRotation: {x: 0.63863474, y: -0.19417691, z: 0.17112164, w: 0.72467816}
+  m_LocalPosition: {x: 17, y: 75.8, z: -8.400001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 82.777, y: -30, z: 0}
 --- !u!1 &1572404509
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,6 +10,7 @@ public class LevelGeneration : MonoBehaviour
 
     public bool shouldResetLevel;
 
+    private Vector3 LevelGenStartPos;
     public Transform[] startingPositions;
     public GameObject[] blocks; //index corresponds to different room types
     public GameObject[] emptyBlocks;
@@ -17,13 +18,14 @@ public class LevelGeneration : MonoBehaviour
     private int direction;
     public float moveAmount;
 
-    private float timeBetweenBlock;
-    public float startTimeBetweenMove = 0.25f;
+    [SerializeField] private float timeBetweenBlock;
+    public float startTimeBetweenMove = 5f;
 
     public float minX;
     public float maxX;
     public float minY;
     public bool stopGenerating;
+    private bool deleteComplete;
 
     public LayerMask roomLayerMask;
 
@@ -65,15 +67,9 @@ public class LevelGeneration : MonoBehaviour
             timeBetweenBlock -= Time.deltaTime;
         }
 
-        if(stopGenerating == true)
+        if(stopGenerating == true && shouldResetLevel == false)
         {
-            blocksInRoom = lastSpawnedObj.GetComponent<RoomType>().blocksInRoom;
-            foreach(GameObject block in blocksInRoom)
-            {
-                MeshRenderer mesh = block.GetComponent<MeshRenderer>();
-                mesh.material.color = Color.red;
-                mesh.gameObject.tag = "FinishCube";
-            }
+            chooseFinishBlock();
         }
     }
 
@@ -88,9 +84,50 @@ public class LevelGeneration : MonoBehaviour
     public void resetGeneratedLevel()
     {
         Debug.Log("Reseting from " + this + " class.");
-        shouldResetLevel = true;
-    }    
+        shouldResetLevel = true; //Stios choosingFinal Block
+        StartCoroutine(startResetting());
+    }
 
+    private IEnumerator startResetting()
+    {
+        yield return new WaitForSeconds(1.5f);
+        Debug.Log("Clearing Lists");
+        spawnedFloorObjects.Clear();
+        spawnedObjects.Clear();
+        lastSpawnedObj = null;
+
+        yield return new WaitForSeconds(.5f);
+        ResetLevel();
+        yield return new WaitForSeconds(.1f);
+
+        shouldResetLevel = false;
+
+        StopCoroutine(startResetting());
+    }
+
+    private void ResetLevel()
+    {
+        int randStartinPos = Random.Range(0, startingPositions.Length);
+        transform.position = startingPositions[randStartinPos].position;
+
+        Instantiate(blocks[0], transform.position, Quaternion.identity);
+        direction = Random.Range(1, 6);
+        
+        timeBetweenBlock = 0;
+        stopGenerating = false;
+    }
+
+    private void chooseFinishBlock()
+    {
+        blocksInRoom = lastSpawnedObj.GetComponent<RoomType>().blocksInRoom; //Changes color of each block in a room
+        foreach (GameObject block in blocksInRoom)
+        {
+            MeshRenderer mesh = block.GetComponent<MeshRenderer>();
+            mesh.material.color = Color.red;
+            mesh.gameObject.tag = "FinishCube";
+        }
+    }
+    
     private void Move()
     {
         if (direction == 1 || direction == 2) //Right
@@ -145,35 +182,25 @@ public class LevelGeneration : MonoBehaviour
             downCounter++;
             if(transform.position.z > minY)
             {
-                Collider[] roomDetection = Physics.OverlapSphere(transform.position, 1, roomLayerMask);
-                if (roomDetection[0].GetComponent<RoomType>().type != 1 && roomDetection[0].GetComponent<RoomType>().type != 3)
+                if (downCounter >= 2)
                 {
-                    if(downCounter >= 2)
+
+                    lastSpawnedObj = Instantiate(blocks[3], transform.position, Quaternion.identity);
+                    spawnedObjects.Add(lastSpawnedObj);
+
+                }
+                else
+                {
+
+                    int randBottomRoom = Random.Range(1, 4);
+
+                    if (randBottomRoom == 2)
                     {
-                        roomDetection[0].GetComponent<RoomType>().RoomDestruction();
-                        spawnedObjects.Remove(roomDetection[0].gameObject);
-
-
-                        lastSpawnedObj = Instantiate(blocks[3], transform.position, Quaternion.identity);
-                        spawnedObjects.Add(lastSpawnedObj);
-
+                        randBottomRoom = 1;
                     }
-                    else
-                    {
-                        roomDetection[0].GetComponent<RoomType>().RoomDestruction();
-                        spawnedObjects.Remove(roomDetection[0].gameObject);
 
-                        int randBottomRoom = Random.Range(1, 4);
-
-                        if (randBottomRoom == 2)
-                        {
-                            randBottomRoom = 1;
-                        }
-
-                        lastSpawnedObj = Instantiate(blocks[randBottomRoom], transform.position, Quaternion.identity);
-                        spawnedObjects.Add(lastSpawnedObj);
-
-                    }
+                    lastSpawnedObj = Instantiate(blocks[randBottomRoom], transform.position, Quaternion.identity);
+                    spawnedObjects.Add(lastSpawnedObj);
                 }
 
                 Vector3 newPos = new Vector3(transform.position.x, transform.position.y, transform.position.z - moveAmount);
@@ -188,6 +215,7 @@ public class LevelGeneration : MonoBehaviour
             else
             {
                 stopGenerating = true;
+               
             }
         }
     }

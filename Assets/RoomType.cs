@@ -16,6 +16,7 @@ public class RoomType : MonoBehaviour
 
     public void RoomDestruction()
     {
+        Debug.Log("I am going to die! " + gameObject.name);
         Destroy(gameObject);
     }
 
@@ -29,13 +30,12 @@ public class RoomType : MonoBehaviour
 
     public void RemoveSelf()
     {
-        LevelGeneration.instance.modifyListExternal(false, LevelGeneration.instance.spawnedFloorObjects, this.gameObject);
         StartCoroutine(destroySelfOnDelay());
     }
     
     private IEnumerator destroySelfOnDelay()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(.5f);
         Destroy(this.gameObject);
         stopCheck = true;
 
