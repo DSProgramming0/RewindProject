@@ -83,8 +83,7 @@ public class ShootExplosion : MonoBehaviour
             //timeManager.DoSlowMotion();
         }
 
-        spread.sSpread += spread.spreadPerSecond * Time.deltaTime;
-        
+        spread.sSpread += spread.spreadPerSecond * Time.deltaTime;        
     }
 
     void Update()
